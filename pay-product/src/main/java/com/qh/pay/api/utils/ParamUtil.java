@@ -1,4 +1,4 @@
-package com.qh.pay.api;
+package com.qh.pay.api.utils;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -36,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
+
+import com.qh.pay.api.Constants;
 
 /***
  * 
