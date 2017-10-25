@@ -21,7 +21,7 @@ public class Md5Util {
 			try {
 				return HexUtil.byte2hex(MessageDigest.getInstance("MD5").digest(content.getBytes()));
 			} catch (NoSuchAlgorithmException e) {
-				logger.error("MD5加密错误！");
+				logger.error("MD5加密错误！" + e.getMessage());
 			}
 		} else {
 			logger.error("SHA加密内容为空！");
@@ -34,7 +34,8 @@ public class Md5Util {
 			try {
 				return HexUtil.byte2hex(MessageDigest.getInstance("SHA").digest(content.getBytes()));
 			} catch (NoSuchAlgorithmException e) {
-				logger.error("SHA加密错误！");
+				logger.error("SHA加密错误！" + e.getMessage());
+				throw new RuntimeException("SHA加密错误！" + e.getMessage());
 			}
 		} else {
 			logger.error("SHA加密内容为空！");
@@ -48,7 +49,8 @@ public class Md5Util {
 			try {
 				messageDigest = MessageDigest.getInstance("MD5");
 			} catch (NoSuchAlgorithmException e) {
-				logger.error("MD5加密错误！");
+				logger.error("MD5加密错误！" + e.getMessage());
+				throw new RuntimeException("MD5加密错误！" + e.getMessage());
 			}
 			messageDigest.update(content.getBytes());
 			return HexUtil.byte2hex(messageDigest.digest());
@@ -65,7 +67,8 @@ public class Md5Util {
 			try {
 				messageDigest = MessageDigest.getInstance("SHA");
 			} catch (NoSuchAlgorithmException e) {
-				logger.error("SHA加密错误！");
+				logger.error("SHA加密错误！" + e.getMessage());
+				throw new RuntimeException("SHA加密错误！" + e.getMessage());
 			}
 			messageDigest.update(content.getBytes());
 			return HexUtil.byte2hex(messageDigest.digest());
