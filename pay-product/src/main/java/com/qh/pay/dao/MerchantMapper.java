@@ -1,4 +1,4 @@
-package com.qh.pay.mapper;
+package com.qh.pay.dao;
 
 import java.util.List;
 
