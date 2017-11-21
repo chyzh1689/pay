@@ -174,9 +174,7 @@ public class PayServiceTest {
 		jsObj.put("orderNo", reqTime + new Random().nextInt(10000));	
 		//支付渠道  ---acp
 		jsObj.put("outChannel", OutChannel.acp.name());
-		if(OutChannel.wy.name().equals(jsObj.get("outChannel"))){
-			jsObj.put("bankName", "建设银行");
-		}
+		jsObj.put("bankName", "建设银行");
 		//订单标题 
 		jsObj.put("title", "商城网银代付");
 		//产品名称
