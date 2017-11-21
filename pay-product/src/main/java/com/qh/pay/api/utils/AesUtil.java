@@ -51,6 +51,24 @@ public class AesUtil {
 	}
 
 	/**
+	 * 生成秘钥
+	 * 
+	 * @return
+	 */
+	public static String generaterKey(String seedStr){
+		KeyGenerator keygen = null;
+		try {
+			keygen = KeyGenerator.getInstance(ALGORITHM);
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("Aes生成密钥错误！" + e.getMessage());
+			throw new RuntimeException("Aes生成密钥错误！" + e.getMessage());
+		}
+		keygen.init(128, new SecureRandom(seedStr.getBytes())); //
+		// 随机因子一样，生成出来的秘钥会一样
+		SecretKey secretKey = keygen.generateKey();
+		return Base64.getEncoder().encodeToString(secretKey.getEncoded());
+	}
+	/**
 	 */
 	public static SecretKeySpec getSecretKeySpec(String secretKeyStr) {
 		byte[] secretKey = Base64.getDecoder().decode(secretKeyStr);

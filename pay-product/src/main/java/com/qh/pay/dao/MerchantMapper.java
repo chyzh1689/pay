@@ -1,21 +1,34 @@
 package com.qh.pay.dao;
 
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
 
-import com.qh.pay.entity.Merchant;
+import com.qh.pay.domain.Merchant;
 
 @Mapper
 public interface MerchantMapper {
-    @Select("select * from merchant where id=#{id}")
-    public Merchant findMerchantById(Long id);
-
-    public List<Merchant> findAllMerchants();
-
-    @Insert("INSERT INTO merchant(username, name, md5Key, balance) VALUES(#{username}, #{name}, #{md5Key}, #{balance})")
-    public int insertMerchant(Merchant merchant);
+    Merchant get(Integer id);
+	
+    Merchant getByMerchNo(String merchNo);
+    
+	List<Merchant> list(Map<String,Object> map);
+	
+	int count(Map<String,Object> map);
+	
+	int exist(String merchNo);
+	
+	int save(Merchant merchant);
+	
+	int update(Merchant merchant);
+	
+	int remove(Integer id);
+	
+	int batchRemove(Integer[] ids);
+	
+	int removeByMerchNo(String merchNo);
+	
+	int batchRemoveByMerchNo(String[] merchNos);
 
 }

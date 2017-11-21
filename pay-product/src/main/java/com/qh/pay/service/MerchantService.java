@@ -1,21 +1,63 @@
 package com.qh.pay.service;
-import java.util.List;
 
-import com.qh.pay.entity.Merchant;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
+import com.qh.pay.api.constenum.UserType;
+import com.qh.pay.domain.Merchant;
+import com.qh.pay.domain.PayAcctBal;
 
 /**
+ * 启晗商户
  * 
- * @ClassName MerchantService
- * @Description 商户操作类
- * @author chenyuezhi
- * @Date 2017年10月24日 上午9:27:47
- * @version 1.0.0
+ * @author chyzh
+ * @email 3048427407@qq.com
+ * @date 2017-11-01 10:05:41
  */
 public interface MerchantService {
+	
+	Merchant get(String merchNo);
+	
+	List<Merchant> list(Map<String, Object> map);
+	
+	int count(Map<String, Object> map);
+	
+	int save(Merchant merchant);
+	
+	int update(Merchant merchant);
+	
+	int remove(String merchNos);
+	
+	int batchRemove(String[] merchNos);
 
-    Merchant findMerchantById(Long id);
+	/**
+	 * @Description 默认商户号
+	 * @return
+	 */
+	String defaultMerchantNo();
 
-    List<Merchant> findAllMerchants();
+	/**
+	 * @Description 是否存在
+	 * @param merchNo
+	 * @return
+	 */
+	boolean exist(String merchNo);
 
-    int insertMerchant(Merchant merchant);
+
+	/**
+	 * 
+	 * @Description 创建支付账户余额
+	 * @param merchant
+	 * @return
+	 */
+	public static PayAcctBal createPayAcctBal(Merchant merchant){
+		PayAcctBal payAcctBal = new PayAcctBal();
+		payAcctBal.setUserId(merchant.getUserId());
+		payAcctBal.setUsername(merchant.getMerchNo());
+		payAcctBal.setUserType(UserType.merch.id());
+		payAcctBal.setBalance(BigDecimal.ZERO);
+		return payAcctBal;
+	}
 }

@@ -10,15 +10,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,13 +28,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
-
-import com.qh.pay.api.Constants;
 
 /***
  * 
@@ -51,67 +45,8 @@ public class ParamUtil {
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ParamUtil.class);
     
     private static AtomicLong acacAtomicLong = new AtomicLong();
-    private static SimpleDateFormat sdf = new SimpleDateFormat(Constants.date_fmt_yyMMddHH_mm_ss);
-    private static SimpleDateFormat sdfDate = new SimpleDateFormat(Constants.date_fmt_yyyyMMdd);
-    private static SimpleDateFormat sdfNumber = new SimpleDateFormat(Constants.date_fmt_yyyyMMddHHmmss);
     private static AtomicLong acacAtomicLongYY = new AtomicLong();
     private static ThreadLocalRandom random = ThreadLocalRandom.current();
-    /**
-     * 
-     * @Description 返回标准时间格式
-     * @return
-     */
-    public static String getCurrentStr(){
-        return sdf.format(new Date());
-    }
-    
-    /**
-     * 
-     * @Description 返回标准时间格式
-     * @param date
-     * @return
-     */
-    public static String getCurrentStr(Date date){
-        return sdf.format(date);
-    }
-    
-    /**
-     * 
-     * @Description 返回日期格式
-     * @return
-     */
-    public static String getCurrentDateStr(){
-        return sdfDate.format(new Date());
-    }
-    
-    /**
-     * 
-     * @Description 返回日期格式
-     * @param date
-     * @return
-     */
-    public static String getCurrentDateStr(Date date){
-        return sdfDate.format(date);
-    }
-    
-    /**
-     * 
-     * @Description 返回纯数字格式
-     * @return
-     */
-    public static String getCurrentNumStr(){
-        return sdfNumber.format(new Date());
-    }
-    
-    /**
-     * 
-     * @Description 返回纯数字格式
-     * @param date
-     * @return
-     */
-    public static String getCurrentNumStr(Date date){
-        return sdfNumber.format(date);
-    }
     /***
      * 
      * @Description 判断内容是否为空
@@ -276,47 +211,6 @@ public class ParamUtil {
         return params;
     }
 
-    /**
-     * 
-     * @Description 通过流获取请求提
-     * @param request
-     * @return
-     */
-    public static String parseRequst(HttpServletRequest request){
-        StringBuilder sb = new StringBuilder();
-        try {
-            ServletInputStream inputStream = request.getInputStream(); 
-            BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-            String info = null;
-            while((info = br.readLine()) != null){
-                sb.append(info);
-            }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }            
-        return sb.toString();
-    }
-    /**
-     * 
-     * @Description 获取当前时间秒单位
-     * @return
-     */
-    public static long getCurrentSecond(Calendar c){
-        long time = c.getTimeInMillis();
-        return time - time % 1000;
-    }
-    /**
-     * 
-     * @Description 获取当前时间秒单位
-     * @return
-     */
-    public static long getCurrentSecond(){
-        long time = System.currentTimeMillis();
-        return time - time % 1000;
-    }
-    
     /** 
      * 大陆号码或香港号码均可 
      */  
@@ -350,125 +244,7 @@ public class ParamUtil {
         return m.matches();  
     } 
     
-    /**
-     * 
-     * @Description 获取倒计时
-     * @param date
-     * @return
-     */
-    public static Integer getCountdown(long time,Date date){
-        if(date.getTime()< time){
-            return 0;
-        }
-        return (int) ((date.getTime()-time)/1000);
-    }
     
-    
-    /****
-     * 
-     * @Description 获取当前时间的起止 00:00:00
-     * @param args
-     * @throws ParseException 
-     */
-    public static Date getBeginTimeZero(Date date){
-        if(date == null){
-            date = new Date();
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat(Constants.date_fmt_yyyyMMdd);
-        try {
-            return sdf.parse(sdf.format(date));
-        } catch (ParseException e) {
-            
-        }
-        return null;
-    }
-    
-    /****
-     * 
-     * @Description 获取当前时间的起止  23:59:59
-     * @param args
-     * @throws ParseException 
-     */
-    public static Date getEndTimeLast(Date date){
-        if(date == null){
-            date = new Date();
-        }
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat(Constants.date_fmt_yyyyMMddHHmmss);
-            return sdf.parse(sdf.format(date).substring(0, 8)+"235959");
-        } catch (ParseException e) {
-            
-        }
-        return null;
-    }
-    
-    /**
-     * 
-     * @Description (获取当前分钟)
-     * @return
-     */
-    public static int getCurrentMinute(Calendar c){
-        return c.get(Calendar.HOUR_OF_DAY) * 60 + c.get(Calendar.MINUTE);
-    }
-    
-    /***
-     * 
-     * @Description 当前分钟 在不在 时间段，如果在 返回true,否则 返回false
-     * @param timePeriod
-     * @param minute
-     * @return
-     */
-    public static boolean ifMinuteInTimePeriod(String timePeriod, int minute) {
-        String [] datas = timePeriod.split(",");
-        if("-".equals(timePeriod)){
-            return true;
-        }
-        boolean result = false;
-        String [] periods;
-        int start;
-        int end;
-        for (String data : datas) {
-            start = 0;
-            end = 24 * 60;
-            if("-".equals(timePeriod)){
-                result = true;
-                break;
-            }
-            if(ParamUtil.isNotEmpty(data)){
-                periods = data.split("-");
-                if(periods.length == 1){
-                   start = strToMinute(periods[0]);
-                }else if(periods.length == 2){
-                   start = strToMinute(periods[0]);
-                   end = strToMinute(periods[1]);
-                }
-                if(minute >= start && minute < end ){
-                    result = true;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
-    
-    /**
-     * 
-     * @Description 时间字符串转化为分钟
-     * @param minuteStr
-     * @return
-     */
-    public static int strToMinute(String minuteStr){
-        int minute = 0;
-        if(ParamUtil.isNotEmpty(minuteStr)){
-            String[] minuteStrs = minuteStr.split(":");
-            if(minuteStrs.length == 1){
-                return Integer.parseInt(minuteStrs[0]) * 60;
-            }else if(minuteStrs.length == 2){
-                return Integer.parseInt(minuteStrs[0]) * 60 + Integer.parseInt(minuteStrs[1]);
-            }
-        }
-        return minute;
-    }
     
     /** 
      * 获取当前网络ip 
@@ -535,23 +311,7 @@ public class ParamUtil {
         return "http://"+ request.getServerName() +"/";
     }
     
-    /**
-     * 
-     * @Description (获取当前星期)
-     * @return
-     */
-    public static int getCurrentWeekDay(Calendar c){
-        return c.get(Calendar.DAY_OF_WEEK);
-    }
     
-    /**
-     * 
-     * @Description (获取当前星期)
-     * @return
-     */
-    public static int getCurrentWeekDay(){
-        return Calendar.getInstance().get(Calendar.DAY_OF_WEEK);
-    }
     public static void buildPayParams(StringBuilder sb,Map<String, String> payParams,boolean encoding){
         List<String> keys = new ArrayList<String>(payParams.keySet());
         Collections.sort(keys);
@@ -801,5 +561,35 @@ public class ParamUtil {
         }
         return false;
     }
+    
+    public static void main(String[] args) {
+		System.out.println(System.currentTimeMillis());
+	}
+
+    /**
+	 * @Description 金额相乘,保留两位小数 四舍五入
+	 * @param amount
+	 * @param costRate
+	 */
+	public static BigDecimal mult(BigDecimal amount, BigDecimal costRate) {
+		return amount.multiply(costRate).setScale(2, RoundingMode.HALF_UP);
+	}
+	/**
+	 * @Description 金额相乘,保留两位小数 往大的靠
+	 * @param amount
+	 * @param costRate
+	 */
+	public static BigDecimal multBig(BigDecimal amount, BigDecimal costRate) {
+		return amount.multiply(costRate).setScale(2, RoundingMode.CEILING);
+	}
+
+	/**
+	 * @Description 金额相乘,保留两位小数,往小的靠
+	 * @param amount
+	 * @param costRate
+	 */
+	public static BigDecimal multSmall(BigDecimal amount, BigDecimal costRate) {
+		return amount.multiply(costRate).setScale(2, RoundingMode.FLOOR);
+	}
     
 }

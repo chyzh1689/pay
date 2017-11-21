@@ -20,7 +20,7 @@ public class HexUtil {
         StringBuilder hs = new StringBuilder();  
         String stmp;  
         for (int i = 0; i < b.length; i++) {  
-            stmp = Integer.toHexString(b[i] & 0xFF).toUpperCase();  
+            stmp = Integer.toHexString(b[i] & 0xFF);  
             if (stmp.length() == 1) {  
                 hs.append("0").append(stmp);  
             } else {  

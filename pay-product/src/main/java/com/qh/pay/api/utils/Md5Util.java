@@ -19,12 +19,12 @@ public class Md5Util {
 	public static String MD5(String content) {
 		if (ParamUtil.isNotEmpty(content)) {
 			try {
-				return HexUtil.byte2hex(MessageDigest.getInstance("MD5").digest(content.getBytes()));
+				return HexUtil.byte2hex(MessageDigest.getInstance("md5").digest(content.getBytes()));
 			} catch (NoSuchAlgorithmException e) {
 				logger.error("MD5加密错误！" + e.getMessage());
 			}
 		} else {
-			logger.error("SHA加密内容为空！");
+			logger.error("MD5加密内容为空！");
 		}
 		return null;
 	}
@@ -81,7 +81,7 @@ public class Md5Util {
 
 	public static void main(String[] args) {
 		String content = "陈大侠";
-		System.out.println(MD5(content));
+		System.out.println(MD5("111111"));
 		System.out.println(MD5Update(content));
 		System.out.println(SHA(content));
 		System.out.println(SHAUpdate(content));

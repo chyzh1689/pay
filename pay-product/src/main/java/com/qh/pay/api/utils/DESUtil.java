@@ -4,14 +4,21 @@ import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 
-import org.apache.commons.codec.binary.Base64;
-
+/**
+ * 
+ * @ClassName DESUtil
+ * @Description des算法
+ * @author chenyuezhi
+ * @Date 2017年11月20日 下午8:21:15
+ * @version 1.0.0
+ */
 public class DESUtil {
     //算法名称 
     public static final String KEY_ALGORITHM = "DES";
@@ -78,7 +85,7 @@ public class DESUtil {
         }
         System.out.println();
         // 执行加密操作。加密后的结果通常都会用Base64编码进行传输 
-        return Base64.encodeBase64String(results);
+        return new String(Base64.getEncoder().encode(results));
     }
 
     /** 
@@ -93,7 +100,7 @@ public class DESUtil {
         //初始化Cipher对象，设置为解密模式
         cipher.init(Cipher.DECRYPT_MODE, deskey);
         // 执行解密操作
-        return new String(cipher.doFinal(Base64.decodeBase64(data)));
+        return new String(cipher.doFinal(Base64.getDecoder().decode(data)));
     }
 
     /** 
@@ -115,7 +122,7 @@ public class DESUtil {
         }
         System.out.println();
         // 执行加密操作。加密后的结果通常都会用Base64编码进行传输 
-        return Base64.encodeBase64String(results);
+        return new String(Base64.getEncoder().encode(results));
     }
 
     /** 
@@ -129,7 +136,7 @@ public class DESUtil {
         //初始化Cipher对象，设置为解密模式
         cipher.init(Cipher.DECRYPT_MODE, deskey);
         // 执行解密操作
-        return new String(cipher.doFinal(Base64.decodeBase64(data)));
+        return new String(cipher.doFinal(Base64.getDecoder().decode(data)));
     }
     public static void main(String[] args) throws Exception {
         String source = "chzh123";
