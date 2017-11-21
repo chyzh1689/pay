@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qh.pay.dao.MerchUserSignDao">
+
+	<select id="get" resultType="com.qh.pay.domain.MerchUserSignDO">
+		select `merch_no`,`user_id`,`pay_company`,`pay_merch`,`sign`,`info`,`acct_name`,`acct_type`,`bank_no`,`cert_type`,`cert_no`,`pone`,`cvv2`,`varlid_date`,`coll_type` from merch_user_sign where merch_no = #{value}
+	</select>
+
+	<select id="list" resultType="com.qh.pay.domain.MerchUserSignDO">
+		select `merch_no`,`user_id`,`pay_company`,`pay_merch`,`sign`,`info`,`acct_name`,`acct_type`,`bank_no`,`cert_type`,`cert_no`,`pone`,`cvv2`,`varlid_date`,`coll_type` from merch_user_sign
+        <where>  
+		  		  <if test="merchNo != null and merchNo != ''"> and merch_no = #{merchNo} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="payCompany != null and payCompany != ''"> and pay_company = #{payCompany} </if>
+		  		  <if test="payMerch != null and payMerch != ''"> and pay_merch = #{payMerch} </if>
+		  		  <if test="sign != null and sign != ''"> and sign = #{sign} </if>
+		  		  <if test="info != null and info != ''"> and info = #{info} </if>
+		  		  <if test="acctName != null and acctName != ''"> and acct_name = #{acctName} </if>
+		  		  <if test="acctType != null and acctType != ''"> and acct_type = #{acctType} </if>
+		  		  <if test="bankNo != null and bankNo != ''"> and bank_no = #{bankNo} </if>
+		  		  <if test="certType != null and certType != ''"> and cert_type = #{certType} </if>
+		  		  <if test="certNo != null and certNo != ''"> and cert_no = #{certNo} </if>
+		  		  <if test="pone != null and pone != ''"> and pone = #{pone} </if>
+		  		  <if test="cvv2 != null and cvv2 != ''"> and cvv2 = #{cvv2} </if>
+		  		  <if test="varlidDate != null and varlidDate != ''"> and varlid_date = #{varlidDate} </if>
+		  		  <if test="collType != null and collType != ''"> and coll_type = #{collType} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by merch_no desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from merch_user_sign
+		 <where>  
+		  		  <if test="merchNo != null and merchNo != ''"> and merch_no = #{merchNo} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="payCompany != null and payCompany != ''"> and pay_company = #{payCompany} </if>
+		  		  <if test="payMerch != null and payMerch != ''"> and pay_merch = #{payMerch} </if>
+		  		  <if test="sign != null and sign != ''"> and sign = #{sign} </if>
+		  		  <if test="info != null and info != ''"> and info = #{info} </if>
+		  		  <if test="acctName != null and acctName != ''"> and acct_name = #{acctName} </if>
+		  		  <if test="acctType != null and acctType != ''"> and acct_type = #{acctType} </if>
+		  		  <if test="bankNo != null and bankNo != ''"> and bank_no = #{bankNo} </if>
+		  		  <if test="certType != null and certType != ''"> and cert_type = #{certType} </if>
+		  		  <if test="certNo != null and certNo != ''"> and cert_no = #{certNo} </if>
+		  		  <if test="pone != null and pone != ''"> and pone = #{pone} </if>
+		  		  <if test="cvv2 != null and cvv2 != ''"> and cvv2 = #{cvv2} </if>
+		  		  <if test="varlidDate != null and varlidDate != ''"> and varlid_date = #{varlidDate} </if>
+		  		  <if test="collType != null and collType != ''"> and coll_type = #{collType} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.qh.pay.domain.MerchUserSignDO">
+		insert into merch_user_sign
+		(
+			`merch_no`, 
+			`user_id`, 
+			`pay_company`, 
+			`pay_merch`, 
+			`sign`, 
+			`info`, 
+			`acct_name`, 
+			`acct_type`, 
+			`bank_no`, 
+			`cert_type`, 
+			`cert_no`, 
+			`pone`, 
+			`cvv2`, 
+			`varlid_date`, 
+			`coll_type`
+		)
+		values
+		(
+			#{merchNo}, 
+			#{userId}, 
+			#{payCompany}, 
+			#{payMerch}, 
+			#{sign}, 
+			#{info}, 
+			#{acctName}, 
+			#{acctType}, 
+			#{bankNo}, 
+			#{certType}, 
+			#{certNo}, 
+			#{pone}, 
+			#{cvv2}, 
+			#{varlidDate}, 
+			#{collType}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.qh.pay.domain.MerchUserSignDO">
+		update merch_user_sign 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="payCompany != null">`pay_company` = #{payCompany}, </if>
+			<if test="payMerch != null">`pay_merch` = #{payMerch}, </if>
+			<if test="sign != null">`sign` = #{sign}, </if>
+			<if test="info != null">`info` = #{info}, </if>
+			<if test="acctName != null">`acct_name` = #{acctName}, </if>
+			<if test="acctType != null">`acct_type` = #{acctType}, </if>
+			<if test="bankNo != null">`bank_no` = #{bankNo}, </if>
+			<if test="certType != null">`cert_type` = #{certType}, </if>
+			<if test="certNo != null">`cert_no` = #{certNo}, </if>
+			<if test="pone != null">`pone` = #{pone}, </if>
+			<if test="cvv2 != null">`cvv2` = #{cvv2}, </if>
+			<if test="varlidDate != null">`varlid_date` = #{varlidDate}, </if>
+			<if test="collType != null">`coll_type` = #{collType}</if>
+		</set>
+		where merch_no = #{merchNo}
+	</update>
+	
+	<delete id="remove">
+		delete from merch_user_sign where merch_no = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from merch_user_sign where merch_no in 
+		<foreach item="merchNo" collection="array" open="(" separator="," close=")">
+			#{merchNo}
+		</foreach>
+	</delete>
+
+</mapper>

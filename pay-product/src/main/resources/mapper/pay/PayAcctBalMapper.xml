@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qh.pay.dao.PayAcctBalMapper">
+
+	<select id="list" resultType="com.qh.pay.domain.PayAcctBal">
+		select `user_id`,`username`,`user_type`,`balance` from pay_acct_bal
+        <where>  
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="username != null and username != ''"> and username = #{username} </if>
+		  		  <if test="userType != null and userType != ''"> and user_type = #{userType} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by user_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from pay_acct_bal
+		 <where>  
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="username != null and username != ''"> and username = #{username} </if>
+		  		  <if test="userType != null and userType != ''"> and user_type = #{userType} </if>
+		  		  <if test="balance != null and balance != ''"> and balance = #{balance} </if>
+		  		</where>
+	</select>
+
+
+
+
+	<select id="getByUserName" resultType="com.qh.pay.domain.PayAcctBal">
+		select `user_id`,`username`,`balance`,`user_type` from pay_acct_bal where username = #{value}
+	</select>
+	
+	<select id="singleByType" resultType="com.qh.pay.domain.PayAcctBal">
+		select `user_id`,`username`,`balance`,`user_type` from pay_acct_bal where user_type = #{value} limit 1
+	</select>
+	
+	<select id="listByType" resultType="com.qh.pay.domain.PayAcctBal">
+		select `user_id`,`username`,`balance`,`user_type` from pay_acct_bal where user_type = #{value}
+	</select>
+	<insert id="save" parameterType="com.qh.pay.domain.PayAcctBal">
+		insert into pay_acct_bal
+		(
+			`user_id`, 
+			`username`, 
+			`user_type`, 
+			`balance`
+		)
+		values
+		(
+			#{userId}, 
+			#{username}, 
+			#{userType}, 
+			#{balance}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.qh.pay.domain.PayAcctBal">
+		update pay_acct_bal 
+		`balance` = #{balance}
+		where username = #{username}
+	</update>
+	
+	<delete id="remove">
+		delete from pay_acct_bal where username = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from pay_acct_bal where username in 
+		<foreach item="username" collection="array" open="(" separator="," close=")">
+			#{username}
+		</foreach>
+	</delete>
+	
+</mapper>

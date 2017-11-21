@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.qh.pay.entity.Merchant;
+import com.qh.pay.domain.Merchant;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,12 +26,11 @@ public class MerchantServiceTest {
     @Test
     public void insertMerchant(){
         Merchant merchant = new Merchant();
-        merchant.setUsername("chdx");
+        merchant.setMerchNo("chdx");
         merchant.setName("陈大侠");
-        merchant.setMd5Key("keyxxxx");
-        merchant.setBalance(new BigDecimal("11111"));
-        int count = merchantService.insertMerchant(merchant);
-        LOGGER.info("count:{},id:{}",count, merchant.getId());
+        merchant.setBalance(new BigDecimal("0"));
+        int count = merchantService.save(merchant);
+        LOGGER.info("count:{},id:{}",count, merchant.getUserId());
     }
 
 

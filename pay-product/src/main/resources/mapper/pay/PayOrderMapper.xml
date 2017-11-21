@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qh.pay.dao.PayOrderDao">
+
+	<select id="get" resultType="com.qh.pay.api.Order">
+		select
+		`order_no`,`merch_no`,`pay_company`,`pay_merch`,`out_channel`,`title`,`product`,`amount`,`currency`,`order_state`,`return_url`,`notify_url`,`req_time`,`user_id`,`bank_no`,`req_ip`,`memo`,`crt_date`,
+		`real_amount`,`cost_amount`,`qh_amount`,`agent_amount`,`msg`,`business_no`
+		from pay_order where order_no = #{orderNo} and merch_no = #{merchNo}
+	</select>
+
+	<select id="list" resultType="com.qh.pay.api.Order">
+		select
+		`order_no`,`merch_no`,`pay_company`,`pay_merch`,`out_channel`,`title`,`product`,`amount`,`currency`,`order_state`,`return_url`,`notify_url`,`req_time`,`user_id`,`bank_no`,`req_ip`,`memo`,`crt_date`,
+		`real_amount`,`cost_amount`,`qh_amount`,`agent_amount`
+		,`msg`,`business_no`
+		from pay_order
+		<where>
+			<if test="orderNo != null and orderNo != ''"> and order_no = #{orderNo} </if>
+			<if test="merchNo != null and merchNo != ''"> and merch_no = #{merchNo} </if>
+			<if test="payCompany != null and payCompany != ''"> and pay_company = #{payCompany} </if>
+			<if test="payMerch != null and payMerch != ''"> and pay_merch = #{payMerch} </if>
+			<if test="outChannel != null and outChannel != ''"> and out_channel = #{outChannel} </if>
+			<if test="orderState != null and orderState != ''"> and order_state = #{orderState} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="bankNo != null and bankNo != ''"> and bank_no = #{bankNo} </if>
+		</where>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by order_no desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+
+	<select id="count" resultType="int">
+		select count(1) from pay_order
+		<where>
+			<if test="orderNo != null and orderNo != ''"> and order_no = #{orderNo} </if>
+			<if test="merchNo != null and merchNo != ''"> and merch_no = #{merchNo} </if>
+			<if test="payCompany != null and payCompany != ''"> and pay_company = #{payCompany} </if>
+			<if test="payMerch != null and payMerch != ''"> and pay_merch = #{payMerch} </if>
+			<if test="outChannel != null and outChannel != ''"> and out_channel = #{outChannel} </if>
+			<if test="orderState != null and orderState != ''"> and order_state = #{orderState} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="bankNo != null and bankNo != ''"> and bank_no = #{bankNo} </if>
+		</where>
+	</select>
+
+	<insert id="save" parameterType="com.qh.pay.api.Order">
+		insert into pay_order
+		(
+		`order_no`,
+		`merch_no`,
+		`pay_company`,
+		`pay_merch`,
+		`out_channel`,
+		`title`,
+		`product`,
+		`amount`,
+		`currency`,
+		`order_state`,
+		`return_url`,
+		`notify_url`,
+		`req_time`,
+		`user_id`,
+		`bank_no`,
+		`req_ip`,
+		`memo`,
+		`crt_date`,
+		<if test="realAmount != null">
+			real_amount,
+		</if>
+		<if test="costAmount != null">
+			cost_amount,
+		</if>
+		<if test="qhAmount != null">
+			qh_amount,
+		</if>
+		<if test="agentAmount != null">
+			agent_amount,
+		</if>
+		`msg`,
+		`business_no`
+		)
+		values
+		(
+		#{orderNo},
+		#{merchNo},
+		#{payCompany},
+		#{payMerch},
+		#{outChannel},
+		#{title},
+		#{product},
+		#{amount},
+		#{currency},
+		#{orderState},
+		#{returnUrl},
+		#{notifyUrl},
+		#{reqTime},
+		#{userId},
+		#{bankNo},
+		#{reqIp},
+		#{memo},
+		#{crtDate},
+		<if test="realAmount != null">
+			#{realAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="costAmount != null">
+			#{costAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="qhAmount != null">
+			#{qhAmount,jdbcType=DECIMAL},
+		</if>
+		<if test="agentAmount != null">
+			#{agentAmount,jdbcType=DECIMAL},
+		</if>
+		#{msg},
+		#{businessNo}
+		)
+	</insert>
+
+	<update id="update" parameterType="com.qh.pay.api.Order">
+		update pay_order
+		<set>
+			<if test="title != null">`title` = #{title}, </if>
+			<if test="product != null">`product` = #{product}, </if>
+			<if test="amount != null">`amount` = #{amount}, </if>
+			<if test="currency != null">`currency` = #{currency}, </if>
+			<if test="orderState != null">`order_state` = #{orderState}, </if>
+			<if test="returnUrl != null">`return_url` = #{returnUrl}, </if>
+			<if test="notifyUrl != null">`notify_url` = #{notifyUrl}, </if>
+			<if test="reqTime != null">`req_time` = #{reqTime}, </if>
+			<if test="bankNo != null">`bank_no` = #{bankNo}, </if>
+			<if test="reqIp != null">`req_ip` = #{reqIp}, </if>
+			<if test="memo != null">`memo` = #{memo}, </if>
+			<if test="realAmount != null">`real_amount` = #{realAmount}, </if>
+			<if test="costAmount != null">`cost_amount` = #{costAmount}, </if>
+			<if test="qhAmount != null">`qh_amount` = #{qhAmount}, </if>
+			<if test="msg != null">`msg` = #{msg}, </if>
+			<if test="businessNo != null">`business_no` = #{businessNo}, </if>
+			<if test="agentAmount != null">`agent_amount` = #{agentAmount}</if>
+		</set>
+		where order_no = #{orderNo} and merch_no = #{merchNo}
+	</update>
+
+</mapper>

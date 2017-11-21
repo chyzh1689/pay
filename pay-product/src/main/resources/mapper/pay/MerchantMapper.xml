@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qh.pay.dao.MerchantMapper">
+
+	<select id="get" resultType="com.qh.pay.domain.Merchant">
+		select `merch_no`,`name`,`user_id`,`fee_rate`,`agent_user`,`public_key` from merchant where user_id = #{value}
+	</select>
+	
+	<select id="getByMerchNo" resultType="com.qh.pay.domain.Merchant">
+		select `merch_no`,`name`,`user_id`,`fee_rate`,`agent_user`,`public_key` from merchant where merch_no = #{value}
+	</select>
+	
+	<select id="exist" resultType="int">
+		select count(1) from merchant where merch_no = #{value}
+	</select>
+	
+	<select id="list" resultType="com.qh.pay.domain.Merchant">
+		select `user_id`,`merch_no`,`name`,`fee_rate`,`public_key`,`agent_user` from merchant
+        <where>  
+		 	<if test="merchNo != null and merchNo != ''"> and merch_no = #{merchNo}</if>
+		 	<if test="name != null and name != ''"> and name = #{name}</if>
+		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by user_id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(1) from merchant
+		<where>  
+		  	<if test="merchNo != null and merchNo != ''"> and merch_no = #{merchNo}</if>
+		 	<if test="name != null and name != ''"> and name = #{name}</if>
+		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.qh.pay.domain.Merchant">
+		insert into merchant
+		(
+			`merch_no`, 
+			`name`, 
+			`user_id`, 
+			`fee_rate`, 
+			`public_key`, 
+			`agent_user`
+		)
+		values
+		(
+			#{merchNo}, 
+			#{name}, 
+			#{userId}, 
+			#{feeRate}, 
+			#{publicKey}, 
+			#{agentUser}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.qh.pay.domain.Merchant">
+		update merchant 
+		<set>
+			<if test="name != null">`name` = #{name}, </if>
+			<if test="feeRate != null">`fee_rate` = #{feeRate}, </if>
+			<if test="publicKey != null">`public_key` = #{publicKey}, </if>
+			<if test="agentUser != null">`agent_user` = #{agentUser}</if>
+		</set>
+		where merch_no = #{merchNo}
+	</update>
+	
+	<delete id="remove">
+		delete from merchant where user_id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from merchant where user_id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<delete id="removeByMerchNo">
+		delete from merchant where merch_no = #{value}
+	</delete>
+	
+	<delete id="batchRemoveByMerchNo">
+		delete from merchant where merch_no in 
+		<foreach item="merchNo" collection="array" open="(" separator="," close=")">
+			#{merchNo}
+		</foreach>
+	</delete>
+
+</mapper>
