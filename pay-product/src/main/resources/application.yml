@@ -1,31 +1,36 @@
 server:
   port: 8888
+  maxHttpHeaderSize: 65536
+  maxPostSize: 4194304
 spring:
   application:
     name: pay-product  #全部小写
-
-#####################################################################################################
-# mysql 属性配置
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/springcloud?characterEncoding=utf8&useSSL=true
-    username: springcloud
-    password: springcloud
-  jpa:
-    hibernate:
-      #ddl-auto: create #ddl-auto:设为create表示每次都重新建表
-      ddl-auto: update #ddl-auto:设为update表示每次都不会重新建表
-    show-sql: true
-#####################################################################################################
-
-#####################################################################################################
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+    encoding: UTF-8
+    content-type: text/html
+    mode: LEGACYHTML5
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  profiles: 
+    active: dev
+  http:
+    multipart:
+      max-file-size: 30Mb
+      max-request-size: 30Mb
+  devtools:
+    restart:
+      enabled: true 
 # mybatis mapper xml 配置
 mybatis:
   # mybatis.type-aliases-package：指定domain类的基包，即指定其在*Mapper.xml文件中可以使用简名来代替全类名（看后边的UserMapper.xml介绍）
-  type-aliases-package:
-  mapper-locations: classpath:mybatis/mapper/*.xml
-  config-location: classpath:mybatis/mybatis-config.xml
-#####################################################################################################
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: mapper/**/*Mapper.xml
+  typeAliasesPackage: com.qh.**.domain
 
 #####################################################################################################
 # 打印日志
